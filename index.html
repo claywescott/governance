@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Governance — Book review desk</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,600;1,6..72,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root{
+  --ink:#14202B; --ink-2:#3F5060; --ink-3:#71818E;
+  --paper:#E8EAE6; --card:#FFFFFF; --rule:#CBD1CE; --rule-2:#E2E6E3;
+  --pine:#1F5C4E; --pine-tint:#E4EEEA;
+  --ox:#8C2F39; --ox-tint:#F6E7E8;
+  --amber:#8A6410; --amber-tint:#F5EDDC;
+  --sans:'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+  --serif:'Newsreader', Georgia, 'Times New Roman', serif;
+  --mono:'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--paper);-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit;font-size:13px;color:var(--ink)}
+:focus-visible{outline:2px solid var(--pine);outline-offset:2px}
+a{color:var(--pine)}
+
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px 96px}
+
+.mast{border-bottom:1.5px solid var(--ink);padding:26px 0 12px}
+.mast-row{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.mast h1{font-family:var(--serif);font-weight:600;font-size:32px;line-height:1.05;margin:0;letter-spacing:-.015em}
+.kicker{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);margin:0 0 6px}
+.stamp{font-family:var(--mono);font-size:11px;color:var(--ink-3);text-align:right;line-height:1.6}
+
+.tally{display:flex;border-bottom:1px solid var(--rule);margin-bottom:20px;flex-wrap:wrap}
+.tally-item{padding:12px 22px 12px 0;margin-right:22px}
+.tally-item + .tally-item{border-left:1px solid var(--rule-2);padding-left:22px}
+.tally-n{font-family:var(--mono);font-size:22px;font-weight:500;line-height:1}
+.tally-l{font-size:11px;color:var(--ink-2);margin-top:5px}
+.tally-item.alert .tally-n{color:var(--ox)}
+
+.tabs{display:flex;gap:2px;margin:0 0 18px}
+.tab{background:none;border:none;border-bottom:2px solid transparent;padding:8px 14px 7px;font-size:13px;font-weight:500;color:var(--ink-2)}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+.tab:hover{color:var(--ink)}
+.tab .cnt{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-left:6px}
+
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.field{background:var(--card);border:1px solid var(--rule);border-radius:2px;padding:7px 10px;font-size:13px;min-width:0}
+.field:hover{border-color:var(--ink-3)}
+.search{flex:1 1 220px}
+.spacer{flex:1 1 auto}
+
+.btn{border:1px solid var(--ink);background:var(--ink);color:#fff;padding:7px 14px;border-radius:2px;font-size:12.5px;font-weight:500}
+.btn:hover{background:#000}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--rule)}
+.btn.ghost:hover{border-color:var(--ink);background:var(--card)}
+.btn.tiny{padding:4px 9px;font-size:11.5px}
+.btn.danger{background:transparent;color:var(--ox);border-color:#DEC4C7}
+.btn.danger:hover{background:var(--ox-tint)}
+
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.chip{border:1px solid var(--rule);background:transparent;color:var(--ink-2);padding:4px 10px;border-radius:999px;font-size:11.5px;white-space:nowrap}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.chip.late[aria-pressed="true"]{background:var(--ox);border-color:var(--ox)}
+.chip .n{font-family:var(--mono);font-size:10.5px;opacity:.7;margin-left:5px}
+
+.card{background:var(--card);border:1px solid var(--rule);border-radius:2px;padding:16px 18px 14px;margin-bottom:10px}
+.card.is-late{border-left:3px solid var(--ox)}
+.card-head{display:flex;gap:14px;align-items:flex-start;justify-content:space-between}
+.bk-title{font-family:var(--serif);font-size:19px;line-height:1.24;font-weight:600;margin:0 0 4px;letter-spacing:-.005em}
+.bk-by{font-size:13px;color:var(--ink-2);margin:0 0 2px}
+.bk-imprint{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin:0}
+.out-tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;padding:4px 9px;border-radius:999px;border:1px solid var(--rule);white-space:nowrap;align-self:center}
+.out-tag.out-Published{border-color:var(--pine);color:#fff;background:var(--pine)}
+.out-tag.out-Rejected{border-color:var(--ox);color:var(--ox);background:var(--ox-tint)}
+.rev-tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;padding:4px 9px;border-radius:999px;border:1px solid #DED2AF;color:var(--amber);background:var(--amber-tint);white-space:nowrap;align-self:center}
+.outcome-ask{margin-top:12px;font-size:12px;color:var(--ink-2);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.ed-tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;padding:4px 9px;border-radius:999px;border:1px solid var(--rule);color:var(--ink-2);white-space:nowrap;align-self:center}
+.ed-tag.ed-Clay{border-color:var(--pine);color:var(--pine);background:var(--pine-tint)}
+.ed-tag.ed-April{border-color:#B7A3C4;color:#5D4370;background:#F0EBF4}
+.ed-tag.ed-none{color:var(--ink-3);border-style:dashed}
+.card-actions{display:flex;gap:6px;flex-shrink:0}
+
+.ladder{display:flex;margin:14px 0 12px;border-top:1px solid var(--rule-2);padding-top:10px}
+.rung{flex:1;min-width:0;padding:0 6px 0 0;text-align:left;background:none;border:none}
+.rung-bar{height:3px;background:var(--rule-2);border-radius:1px;margin-bottom:6px}
+.rung.done .rung-bar{background:var(--pine)}
+.rung.here .rung-bar{background:var(--ink)}
+.rung.here.late-here .rung-bar{background:var(--ox)}
+.rung-n{font-family:var(--mono);font-size:9.5px;color:var(--ink-3);display:block;line-height:1}
+.rung-l{font-size:10px;color:var(--ink-3);display:block;line-height:1.25;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rung.here .rung-n,.rung.here .rung-l{color:var(--ink);font-weight:600}
+.rung.done .rung-l{color:var(--ink-2)}
+.rung:hover .rung-l{color:var(--ink)}
+
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:10px 18px}
+.meta-k{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:2px}
+.meta-v{font-size:12.5px;line-height:1.4}
+.meta-v.mono{font-family:var(--mono);font-size:11.5px}
+
+.flagline{display:inline-flex;align-items:center;gap:7px;margin-top:12px;background:var(--ox-tint);color:var(--ox);border-radius:2px;padding:5px 9px;font-size:11.5px;font-weight:500}
+.flagline.warn{background:var(--amber-tint);color:var(--amber)}
+.flagline .d{font-family:var(--mono)}
+
+.notes{margin-top:12px;padding-top:10px;border-top:1px solid var(--rule-2);font-size:12.5px;line-height:1.55;color:var(--ink-2)}
+.approach{margin-top:12px;border-top:1px solid var(--rule-2);padding-top:9px}
+.approach-head{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px;display:flex;justify-content:space-between}
+.approach-count{color:var(--ink-3)}
+.app-row{display:grid;grid-template-columns:20px 1fr 150px 152px auto;gap:10px;align-items:baseline;padding:5px 0;border-bottom:1px dotted var(--rule-2);font-size:12.5px}
+.app-row:last-child{border-bottom:none}
+.app-n{font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+.app-who strong{font-weight:600}
+.app-affil{color:var(--ink-2);font-size:12px}
+.app-note{display:block;color:var(--ink-3);font-size:11.5px;line-height:1.4;margin-top:1px}
+.app-dates{font-family:var(--mono);font-size:10.5px;color:var(--ink-3)}
+.app-state{font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);border:1px solid var(--rule-2);border-radius:2px;padding:2px 6px;text-align:center;white-space:nowrap}
+.app-state.st-Agreed{border-color:var(--pine);color:var(--pine);background:var(--pine-tint)}
+.app-state.st-Invited{border-color:#DED2AF;color:var(--amber);background:var(--amber-tint)}
+.app-state.st-Declined,.app-state.st-Noreply{color:var(--ink-3)}
+.app-state.st-Acceptednodelivery{border-color:var(--ox);color:var(--ox);background:var(--ox-tint)}
+.app-row.st-Declined .app-who strong,.app-row.st-Noreply .app-who strong{color:var(--ink-3);font-weight:400}
+.app-row.st-Acceptednodelivery .app-who strong{color:var(--ox)}
+.app-do{display:flex;gap:5px;justify-content:flex-end}
+.cand-list{margin-top:10px;display:flex;flex-wrap:wrap;gap:5px}
+.cand{font-size:11.5px;border:1px solid var(--rule-2);border-radius:2px;padding:3px 8px;background:#FBFCFB;color:var(--ink-2)}
+.cand .st{font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;margin-left:6px}
+.cand.Declined{color:var(--ink-3);text-decoration:line-through}
+.cand.Agreed{border-color:var(--pine);color:var(--pine);background:var(--pine-tint)}
+.cand.Invited{border-color:#DED2AF;background:var(--amber-tint);color:var(--amber)}
+
+.issue-head{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);margin:22px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--rule)}
+.pub-row{display:grid;grid-template-columns:1fr 190px 92px;gap:14px;align-items:start;padding:11px 0;border-bottom:1px solid var(--rule-2)}
+.pub-t{font-family:var(--serif);font-size:15.5px;line-height:1.3}
+.pub-sub{font-size:12px;color:var(--ink-2);margin-top:2px}
+.pub-rev{font-size:12px;color:var(--ink-2)}
+.pub-rev .lbl{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:2px}
+.pub-link{font-family:var(--mono);font-size:11px;text-decoration:none}
+.pub-link:hover{text-decoration:underline}
+
+.bench-row{display:grid;grid-template-columns:1fr 1fr 120px;gap:14px;align-items:center;padding:11px 0;border-bottom:1px solid var(--rule-2);font-size:13px}
+.pill{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:999px;border:1px solid var(--rule);color:var(--ink-2);display:inline-block}
+.pill.Available{border-color:var(--pine);color:var(--pine);background:var(--pine-tint)}
+.pill.Engaged{border-color:#DED2AF;color:var(--amber);background:var(--amber-tint)}
+.pill.Declined{color:var(--ink-3)}
+
+.scrim{position:fixed;inset:0;background:rgba(20,32,43,.34);z-index:40}
+.panel{position:fixed;top:0;right:0;bottom:0;width:min(560px,100%);background:var(--paper);z-index:41;overflow-y:auto;border-left:1px solid var(--ink);box-shadow:-14px 0 34px rgba(20,32,43,.14)}
+.panel-in{padding:22px 24px 60px}
+.panel-head{display:flex;justify-content:space-between;align-items:center;border-bottom:1.5px solid var(--ink);padding-bottom:10px;margin-bottom:18px}
+.panel-head h2{font-family:var(--serif);font-size:21px;margin:0;font-weight:600}
+.fieldset{margin-bottom:20px}
+.legend{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);margin-bottom:9px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}
+label.lab{display:block;font-size:11px;color:var(--ink-2);margin-bottom:3px}
+.inp{width:100%;background:var(--card);border:1px solid var(--rule);border-radius:2px;padding:7px 9px}
+.inp:focus{border-color:var(--pine)}
+textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
+.cand-slot{border:1px solid var(--rule);background:#FBFCFB;border-radius:2px;padding:10px 11px;margin-bottom:8px}
+.slot-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.slot-n{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.check{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink-2);cursor:pointer}
+.check input{accent-color:var(--pine);width:14px;height:14px}
+.slot-full{font-size:11.5px;color:var(--ink-3);line-height:1.5;margin:4px 0 0}
+.cand-edit{display:grid;grid-template-columns:1fr 1fr 110px 28px;gap:6px;margin-bottom:6px;align-items:center}
+.x{border:none;background:none;color:var(--ink-3);font-size:16px;line-height:1;padding:4px}
+.x:hover{color:var(--ox)}
+.panel-foot{display:flex;gap:9px;padding-top:14px;border-top:1px solid var(--rule);flex-wrap:wrap}
+.gap{height:9px}
+
+.empty{text-align:center;padding:56px 20px;color:var(--ink-3);font-size:13px}
+.empty .big{font-family:var(--serif);font-size:19px;color:var(--ink-2);margin-bottom:6px}
+.saved{font-family:var(--mono);font-size:10.5px;color:var(--ink-3)}
+.footbar{margin-top:34px;padding-top:14px;border-top:1px solid var(--rule);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.hide{display:none}
+
+@media (max-width:720px){
+  .wrap{padding:0 14px 80px}
+  .mast h1{font-size:25px}
+  .stamp{text-align:left}
+  .pub-row{grid-template-columns:1fr;gap:5px}
+  .bench-row{grid-template-columns:1fr;gap:6px}
+  .grid3,.grid2{grid-template-columns:1fr}
+  .cand-edit{grid-template-columns:1fr 1fr}
+  .app-row{grid-template-columns:20px 1fr;gap:4px}
+  .app-dates,.app-state,.app-do{grid-column:2}
+  .app-state{justify-self:start}
+  .app-do{justify-content:flex-start}
+  .ladder{overflow-x:auto}
+  .rung{min-width:74px}
+  .card-head{flex-direction:column}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <div class="mast-row">
+      <div>
+        <p class="kicker">Governance &middot; Book review desk</p>
+        <h1>Review pipeline and published log</h1>
+      </div>
+      <div class="stamp" id="stamp"></div>
+    </div>
+  </header>
+
+  <div class="tally" id="tally"></div>
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <div class="toolbar" id="toolbar"></div>
+  <div id="view"></div>
+
+  <div class="footbar">
+    <span class="saved" id="savenote">Changes save to this browser.</span>
+    <span class="spacer"></span>
+    <button class="btn ghost tiny" id="btn-export-json">Export data file</button>
+    <button class="btn ghost tiny" id="btn-import-json">Import data file</button>
+    <button class="btn ghost tiny" id="btn-reload-shared">Load shared data.json</button>
+    <button class="btn ghost tiny" id="btn-reset">Reset to original</button>
+    <input type="file" id="file-input" accept="application/json,.json" class="hide" />
+  </div>
+</div>
+<div id="overlay"></div>
+
+<script>
+"use strict";
+
+/* ---------------- stage model ---------------- */
+var STAGES = [
+  {id:"suitable",  n:"1", label:"Suitable for review",         short:"Suitable"},
+  {id:"potential", n:"2", label:"Potential reviewers",         short:"Candidates"},
+  {id:"invited",   n:"3", label:"Invitation sent",             short:"Invited"},
+  {id:"agreed",    n:"4", label:"Reviewer agreed",             short:"Agreed"},
+  {id:"sent",      n:"5", label:"Book sent",                   short:"Book sent"},
+  {id:"exchange",  n:"6", label:"Sent to Research Exchange",   short:"Res. Exchange"},
+  {id:"final",     n:"7", label:"Final status",                short:"Final status"}
+];
+var OUTCOMES = ["Published","Rejected"];
+/* Stages replaced in earlier versions of this file. */
+var STAGE_ALIASES = {received:"exchange", revision:"exchange", accepted:"exchange"};
+var CANDIDATE_STATES = ["Suggested","Invited","Agreed","Declined","No reply","Accepted, no delivery"];
+var MAX_CANDIDATES = 5;
+var DEAD_STATES = {"Declined":1, "No reply":1, "Accepted, no delivery":1};
+var EDITORS = ["Clay","April"];
+var SOURCES = ["Publisher","Author","Reviewer","Editor"];
+var CHASEABLE = {invited:1, agreed:1, sent:1, exchange:1};
+var STALE_DAYS = 42;
+
+function stageIndex(id){ for(var i=0;i<STAGES.length;i++){ if(STAGES[i].id===id) return i; } return 0; }
+function stageLabel(id){ for(var i=0;i<STAGES.length;i++){ if(STAGES[i].id===id) return STAGES[i].label; } return id; }
+
+/* ---------------- seed data ---------------- */
+var SEED = {
+ pipeline:[
+  {id:"p-tosun",
+   title:"Decentralized Governance and Climate Change: Studies in Fiscal Federalism and State-Local Finance",
+   authors:"Edited by Jorge Martinez-Vazquez, Paul Smoke and Serdar Yilmaz",
+   publisher:"Edward Elgar", place:"Cheltenham", year:"2025", pages:"", price:"", isbn:"",
+   stage:"sent", editor:"Clay", source:"", outcome:"", inRevision:false,
+   reviewer:{name:"Mehmet S. Tosun", email:"tosun@unr.edu", affil:"University of Nevada, Reno"},
+   candidates:[
+     {name:"Mehmet S. Tosun", affil:"University of Nevada, Reno", email:"tosun@unr.edu", state:"Agreed", invited:"2026-01-05", replied:"2026-01-05", note:"Book dispatched 8 Jan. Nothing since. Chased 11 June, no reply."},
+     {name:"Blane Lewis", affil:"Australian National University", email:"", state:"Invited", invited:"", replied:"", note:"Withdraw if Schneider confirms"},
+     {name:"Aaron Schneider", affil:"University of Denver", email:"", state:"Suggested", invited:"", replied:"", note:"Invitation drafted and ready to send"},
+     {name:"Francois Vaillancourt", affil:"Universite de Montreal", email:"francois.vaillancourt@umontreal.ca", state:"Suggested", invited:"", replied:"", note:"Suggested by Serdar"},
+     {name:"Rose Vincent", affil:"Utrecht University", email:"r.c.vincent@uu.nl", state:"Suggested", invited:"", replied:"", note:"Suggested by Serdar"}
+   ],
+   dates:{invited:"2026-01-05", agreed:"", bookSent:"2026-01-08", due:"2026-03-31", received:""},
+   format:"Hard copy from Elgar", lastContact:"2026-06-11",
+   notes:"Instructions sent 5 Jan; book requested from Elgar 6 Jan; Elgar confirmed dispatch 8 Jan. Review asked for by end March. Status chased 11 June, no reply. Decide whether to release Tosun and move to Schneider."},
+
+  {id:"p-olsen",
+   title:"Government Organization and Civilized Coexistence",
+   authors:"Johan P. Olsen",
+   publisher:"Scandinavian University Press", place:"Oslo", year:"2026", pages:"", price:"", isbn:"",
+   stage:"sent", editor:"Clay", source:"", outcome:"", inRevision:true,
+   reviewer:{name:"Jozef Batora", email:"batora3@uniba.sk", affil:"University of Bratislava"},
+   candidates:[],
+   dates:{invited:"2026-02-11", agreed:"2026-02-11", bookSent:"", due:"", received:"2026-06-15"},
+   format:"PDF - publisher sent no hard copy; PDF and ebook free at scup.com", lastContact:"2026-06-15",
+   notes:"Reviewer agreed 11 Feb. Hard copy requested from publisher but not supplied; reviewer worked from the PDF. Review received; minor revisions requested 15 June. Awaiting revised text."},
+
+  {id:"p-sheng",
+   title:"Modes of Coordination and Performance in Polycentric Governance: Disentangling Complexity",
+   authors:"Edited by Andreas Thiel, Elizabeth Baldwin, Mark Stephan and Sergio Villamayor-Tomas",
+   publisher:"Oxford University Press", place:"Oxford", year:"2025", pages:"206", price:"$114.93 (ebook)", isbn:"",
+   stage:"exchange", editor:"Clay", source:"", outcome:"", inRevision:true,
+   reviewer:{name:"Jichuan Sheng", email:"jichuan.sheng@unimelb.edu.au", affil:"University of Melbourne / Hohai University"},
+   candidates:[],
+   dates:{invited:"", agreed:"", bookSent:"", due:"", received:"2026-02-06"},
+   format:"Ebook", lastContact:"2026-06-11",
+   notes:"Review submitted to the system by the Governance office 6 Feb. AI-use query sent 11 June; response acceptable and handled under the journal's AI-disclosure policy. Reviewer asked to integrate the abstract and resubmit."},
+
+  {id:"p-abbas",
+   title:"Digital Co-Production of Public Services",
+   authors:"", publisher:"", place:"", year:"", pages:"", price:"", isbn:"",
+   stage:"sent", editor:"Clay", source:"", outcome:"", inRevision:true,
+   reviewer:{name:"Syed Zain Abbas", email:"", affil:""},
+   candidates:[],
+   dates:{invited:"", agreed:"", bookSent:"", due:"", received:""},
+   format:"", lastContact:"",
+   notes:"Near complete after several revision rounds. One outstanding correction: the Chapter 9 platform-country count is inconsistent. Fix before it goes to copyediting. Book bibliographic details still to be filled in."},
+
+  {id:"p-mazzuca",
+   title:"The Road to Repression",
+   authors:"Kaire", publisher:"", place:"", year:"", pages:"", price:"", isbn:"",
+   stage:"invited", editor:"Clay", source:"", outcome:"", inRevision:false,
+   reviewer:{name:"", email:"", affil:""},
+   candidates:[{name:"Sebastian Mazzuca", affil:"Johns Hopkins University", email:"", state:"Invited", invited:"2026-06-15", replied:"", note:"No reply yet"}],
+   dates:{invited:"2026-06-15", agreed:"", bookSent:"", due:"", received:""},
+   format:"", lastContact:"2026-06-15",
+   notes:"Invitation sent 15 June, no reply yet. Full author name, publisher and year still to be confirmed."},
+
+  {id:"p-kumar",
+   title:"Building Social Mobility: How Subsidized Homeownership Creates Wealth, Dignity and Voice in India",
+   authors:"Tanu Kumar", publisher:"", place:"", year:"", pages:"", price:"", isbn:"",
+   stage:"potential", editor:"Clay", source:"", outcome:"", inRevision:false,
+   reviewer:{name:"", email:"", affil:""},
+   candidates:[],
+   dates:{invited:"", agreed:"", bookSent:"", due:"", received:""},
+   format:"", lastContact:"2026-02-15",
+   notes:"Names of possible reviewers requested 15 Feb; nothing back. Needs a candidate list - housing policy, subsidy design or Indian political economy."},
+
+  {id:"p-echo",
+   title:"The President's Echo System",
+   authors:"", publisher:"", place:"", year:"", pages:"", price:"", isbn:"",
+   stage:"potential", editor:"Clay", source:"", outcome:"", inRevision:false,
+   reviewer:{name:"", email:"", affil:""},
+   candidates:[
+     {name:"Daniel Galvin", affil:"Northwestern University", email:"", state:"Declined", invited:"2026-06-15", replied:"2026-06-15", note:""},
+     {name:"Haney", affil:"", email:"", state:"Declined", invited:"", replied:"", note:"First name and affiliation to be confirmed"}
+   ],
+   dates:{invited:"2026-06-15", agreed:"", bookSent:"", due:"", received:""},
+   format:"", lastContact:"2026-06-15",
+   notes:"Two declines. Needs a fresh candidate list - American executive politics."}
+ ],
+
+ published:[
+  {id:"b-70043", issue:"Oct 2025", title:"Trajectories of Governance: Tracing the Entanglements of Order and Violence in Peripheral Cities of Latin America", authors:"Viviana Garcia Pinzon", publisher:"Bristol University Press", year:"2024", reviewer:"", doi:"https://onlinelibrary.wiley.com/doi/10.1111/gove.70043"},
+  {id:"b-70038", issue:"Jul 2025", title:"Local Peace, International Builders: How UN Peacekeeping Builds Peace From the Bottom Up", authors:"William G. Nomikos", publisher:"Cambridge University Press", year:"2025", reviewer:"", doi:"https://onlinelibrary.wiley.com/doi/10.1111/gove.70038"},
+  {id:"b-70040", issue:"Jul 2025", title:"Unrealized Digital Democracy: A Critical Analysis of Power in the Digital Age", authors:"Garrett Pierman", publisher:"Lexington Books", year:"2024", reviewer:"", doi:"https://onlinelibrary.wiley.com/doi/10.1111/gove.70040"},
+  {id:"b-12904", issue:"Apr 2025", title:"Projects, Government, and Public Policy", authors:"Stanislaw Gasik", publisher:"CRC Press", year:"2023", reviewer:"Sinta Novia, Rayson Virtuosi, Winata Masniari Samosir, Fatchul Chobir", doi:"https://onlinelibrary.wiley.com/doi/10.1111/gove.12904"},
+  {id:"b-70003", issue:"Apr 2025", title:"Patronage at Work: Public Jobs and Political Services in Argentina", authors:"Virginia Oliveros", publisher:"Cambridge University Press", year:"2021", reviewer:"Sarah Brierley", doi:"https://onlinelibrary.wiley.com/doi/10.1111/gove.70003"},
+  {id:"b-70005", issue:"Apr 2025", title:"Promoting Integrity in the Work of International Organizations", authors:"Duncan Smith", publisher:"Springer", year:"2021", reviewer:"Andrea De Tommaso", doi:"https://onlinelibrary.wiley.com/doi/10.1111/gove.70005"},
+  {id:"b-70006", issue:"Apr 2025", title:"Mission Driven Bureaucrats: Empowering People to Help Governments Do Better", authors:"Dan Honig", publisher:"Oxford University Press", year:"2024", reviewer:"Guillermo Toral", doi:"https://onlinelibrary.wiley.com/doi/10.1111/gove.70006"},
+  {id:"b-70007", issue:"Apr 2025", title:"Age of Revolutions: Progress and Backlash From 1600 to the Present", authors:"Fareed Zakaria", publisher:"W. W. Norton", year:"2024", reviewer:"Virak Prum", doi:"https://onlinelibrary.wiley.com/doi/10.1111/gove.70007"},
+  {id:"b-70009", issue:"Apr 2025", title:"Policy Analysis: A Practical Introduction", authors:"David Bromell", publisher:"Springer", year:"2024", reviewer:"A. Muhammad Nurfajrin Nasri", doi:"https://onlinelibrary.wiley.com/doi/10.1111/gove.70009"},
+  {id:"b-70010", issue:"Apr 2025", title:"Planning for Cities in Crisis: Lessons From Gondar, Ethiopia", authors:"Mulatu Wubneh", publisher:"Springer Nature", year:"2022", reviewer:"Hijrah Lail, Risma Abbas, Andi Muh Mario Haring", doi:"https://onlinelibrary.wiley.com/doi/10.1111/gove.70010"},
+  {id:"b-70014", issue:"Apr 2025", title:"Imperial Borderlands", authors:"Bogdan G. Popescu", publisher:"Cambridge University Press", year:"2023", reviewer:"Joan Ricart-Huguet", doi:"https://onlinelibrary.wiley.com/doi/10.1111/gove.70014"},
+  {id:"b-70016", issue:"Apr 2025", title:"Charities and Politics: A Principled Approach", authors:"Matthew Harding", publisher:"Monash University Publishing", year:"2024", reviewer:"B. V. E. Hyde", doi:"https://onlinelibrary.wiley.com/doi/10.1111/gove.70016"},
+  {id:"b-jennings", issue:"Jan 2025", title:"Rethinking Global Governance: Learning From Long-Ignored Societies", authors:"Justin Jennings", publisher:"Routledge", year:"2023", reviewer:"Aditya Putra", doi:""}
+ ],
+
+ bench:[
+  {id:"r1", name:"Aaron Schneider", affil:"University of Denver", fields:"Decentralization, fiscal politics", status:"Available", note:"Invitation drafted for the Elgar climate/decentralization volume"},
+  {id:"r2", name:"Francois Vaillancourt", affil:"Universite de Montreal", fields:"Fiscal federalism", status:"Available", note:"Suggested by Serdar"},
+  {id:"r3", name:"Rose Vincent", affil:"Utrecht University", fields:"Fiscal decentralization", status:"Available", note:"Suggested by Serdar"},
+  {id:"r4", name:"Mehmet S. Tosun", affil:"University of Nevada, Reno", fields:"State and local finance", status:"Engaged", note:"Holds the Elgar volume; unresponsive since January"},
+  {id:"r5", name:"Blane Lewis", affil:"Australian National University", fields:"Local government finance, Indonesia", status:"Engaged", note:"Outstanding invitation - withdraw if Schneider confirms"},
+  {id:"r6", name:"Jozef Batora", affil:"University of Bratislava", fields:"Organization theory, institutional change", status:"Engaged", note:"Reviewing Olsen"},
+  {id:"r7", name:"Sebastian Mazzuca", affil:"Johns Hopkins University", fields:"State building, Latin America", status:"Engaged", note:"Invited for Kaire"},
+  {id:"r8", name:"Daniel Galvin", affil:"Northwestern University", fields:"American executive politics, workplace policy", status:"Declined", note:"Declined June 2026"}
+ ]
+};
+
+/* ---------------- helpers ---------------- */
+var KEY = "gove-book-reviews-v1";
+function uid(){ return Math.random().toString(36).slice(2,10); }
+function today(){ return new Date().toISOString().slice(0,10); }
+function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function daysBetween(a,b){ return Math.round((new Date(b).getTime()-new Date(a).getTime())/86400000); }
+function fmtDate(d){
+  if(!d) return "\u2014";
+  var dt = new Date(d+"T00:00:00");
+  if(isNaN(dt.getTime())) return d;
+  return dt.toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});
+}
+function lateness(e){
+  if(e.stage === "final") return {late:false, days:0, reason:""};
+  var t = today();
+  if(e.dates && e.dates.due && !e.dates.received && daysBetween(e.dates.due,t) > 0){
+    return {late:true, days:daysBetween(e.dates.due,t), reason:"due"};
+  }
+  var anchor = e.lastContact || (e.dates && e.dates.invited);
+  if(CHASEABLE[e.stage] && anchor){
+    var d = daysBetween(anchor,t);
+    if(d > STALE_DAYS) return {late:true, days:d, reason:"quiet"};
+  }
+  return {late:false, days:0, reason:""};
+}
+function csvEscape(v){
+  var s = String(v==null?"":v).replace(/"/g,'""');
+  return /[",\n]/.test(s) ? '"'+s+'"' : s;
+}
+function download(name, text, mime){
+  var blob = new Blob([text], {type: mime || "text/plain;charset=utf-8"});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+}
+function clone(o){ return JSON.parse(JSON.stringify(o)); }
+
+/* Older saved files predate the email/invited/replied fields on candidates.
+   Fill them in so nothing renders as undefined. */
+function normalize(d){
+  if(!d || !d.pipeline) return d;
+  d.pipeline.forEach(function(e){
+    e.candidates = (e.candidates||[]).map(function(c){
+      return {
+        name:  c.name  || "",
+        affil: c.affil || "",
+        email: c.email || "",
+        state: c.state || "Suggested",
+        invited: c.invited || "",
+        replied: c.replied || "",
+        note:  c.note  || ""
+      };
+    });
+    e.reviewer = e.reviewer || {name:"",email:"",affil:""};
+    e.dates = e.dates || {invited:"",agreed:"",bookSent:"",due:"",received:""};
+    if(typeof e.editor !== "string") e.editor = "";
+    if(typeof e.source !== "string") e.source = "";
+    if(STAGE_ALIASES[e.stage]){
+      if(e.stage === "revision") e.inRevision = true;
+      e.stage = STAGE_ALIASES[e.stage];
+    }
+    if(typeof e.outcome !== "string") e.outcome = "";
+    e.inRevision = !!e.inRevision;
+    if(e.stage !== "final") e.outcome = "";
+  });
+  return d;
+}
+
+/* True when every name approached has come to nothing and no reviewer is
+   confirmed - the book needs fresh candidates. */
+function exhausted(e){
+  if(e.reviewer && e.reviewer.name) return false;
+  if(stageIndex(e.stage) >= stageIndex("exchange")) return false;
+  var cands = e.candidates || [];
+  if(!cands.length) return false;
+  var live = cands.filter(function(c){ return !DEAD_STATES[c.state]; });
+  return live.length === 0;
+}
+
+/* A confirmed reviewer who accepted and never delivered. */
+function lapsed(e){
+  return (e.candidates||[]).filter(function(c){ return c.state==="Accepted, no delivery"; }).length;
+}
+
+/* ---------------- state ---------------- */
+var DATA = null;
+var UI = {tab:"pipeline", filter:"all", editor:"all", q:"", sort:"urgency", editing:null};
+var NOTE = "";
+
+function save(){
+  try{
+    localStorage.setItem(KEY, JSON.stringify(DATA));
+    NOTE = "Saved " + new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
+  }catch(err){
+    NOTE = "Could not save to this browser - export a data file instead";
+  }
+  render();
+}
+
+function boot(){
+  var stored = null;
+  try{ stored = localStorage.getItem(KEY); }catch(err){ stored = null; }
+  if(stored){
+    try{
+      DATA = normalize(JSON.parse(stored));
+      NOTE = "Local copy loaded";
+      render();
+      return;
+    }catch(err){ /* fall through */ }
+  }
+  if(location.protocol === "http:" || location.protocol === "https:"){
+    fetch("data.json", {cache:"no-store"})
+      .then(function(r){ if(!r.ok) throw new Error("no shared file"); return r.json(); })
+      .then(function(j){ DATA = normalize(j); NOTE = "Shared data.json loaded"; render(); })
+      .catch(function(){ DATA = clone(SEED); NOTE = "Started from the original files"; render(); });
+  } else {
+    DATA = clone(SEED); NOTE = "Started from the original files"; render();
+  }
+}
+
+/* ---------------- render ---------------- */
+function scopedPipeline(){
+  if(UI.editor==="all") return DATA.pipeline;
+  if(UI.editor==="none") return DATA.pipeline.filter(function(e){ return !e.editor; });
+  return DATA.pipeline.filter(function(e){ return e.editor===UI.editor; });
+}
+
+function counts(){
+  var list = scopedPipeline();
+  var c = {all: list.length, late:0, exhausted:0, lapsed:0};
+  STAGES.forEach(function(s){ c[s.id] = 0; });
+  list.forEach(function(e){
+    c[e.stage] = (c[e.stage]||0) + 1;
+    if(lateness(e).late) c.late += 1;
+    if(exhausted(e)) c.exhausted += 1;
+    c.lapsed += lapsed(e);
+  });
+  return c;
+}
+
+function renderTally(c){
+  var items = [
+    {n:c.all, l:(UI.tab==="pipeline" && UI.editor!=="all"
+        ? (UI.editor==="none" ? "unassigned books" : "books with " + UI.editor)
+        : "books in hand"), alert:false},
+    {n:(c.suitable||0)+(c.potential||0), l:"need a reviewer", alert:false},
+    {n:(c.invited||0)+(c.agreed||0)+(c.sent||0), l:"out with reviewers", alert:false},
+    {n:c.exchange||0, l:"at Research Exchange", alert:false},
+    {n:c.final||0, l:"closed", alert:false},
+    {n:c.late, l:"overdue or gone quiet", alert:c.late>0},
+    {n:c.exhausted, l:"out of names", alert:c.exhausted>0}
+  ];
+  document.getElementById("tally").innerHTML = items.map(function(i){
+    return '<div class="tally-item'+(i.alert?" alert":"")+'"><div class="tally-n">'+i.n+'</div><div class="tally-l">'+i.l+'</div></div>';
+  }).join("");
+}
+
+function renderTabs(){
+  var t = [
+    {id:"pipeline",  label:"Pipeline",       n:DATA.pipeline.length},
+    {id:"published", label:"Published",      n:DATA.published.length},
+    {id:"bench",     label:"Reviewer bench", n:DATA.bench.length}
+  ];
+  document.getElementById("tabs").innerHTML = t.map(function(x){
+    return '<button class="tab" role="tab" aria-selected="'+(UI.tab===x.id)+'" data-tab="'+x.id+'">'+x.label+'<span class="cnt">'+x.n+'</span></button>';
+  }).join("");
+}
+
+function renderToolbar(){
+  var h = '<input class="field search" id="q" placeholder="'+
+    (UI.tab==="pipeline" ? "Search titles, authors, reviewers, notes" : "Search")+
+    '" value="'+esc(UI.q)+'" />';
+  if(UI.tab==="pipeline"){
+    h += '<select class="field" id="editorfilter">'+
+      '<option value="all"'+(UI.editor==="all"?" selected":"")+'>Both editors</option>'+
+      EDITORS.map(function(x){
+        return '<option value="'+esc(x)+'"'+(UI.editor===x?" selected":"")+'>'+esc(x)+' only</option>'; }).join("")+
+      '<option value="none"'+(UI.editor==="none"?" selected":"")+'>Unassigned</option>'+
+      '</select>';
+    h += '<select class="field" id="sort">'+
+      '<option value="urgency"'+(UI.sort==="urgency"?" selected":"")+'>Sort: what needs chasing</option>'+
+      '<option value="stage"'+(UI.sort==="stage"?" selected":"")+'>Sort: earliest stage first</option>'+
+      '<option value="title"'+(UI.sort==="title"?" selected":"")+'>Sort: title</option>'+
+      '</select>'+
+      '<button class="btn" id="btn-add">Add a book</button>'+
+      '<button class="btn ghost" id="btn-csv">Export CSV</button>';
+  }
+  document.getElementById("toolbar").innerHTML = h;
+}
+
+function ladderHtml(e, late){
+  var cur = stageIndex(e.stage);
+  return '<div class="ladder" role="group" aria-label="Review stage">' + STAGES.map(function(s,i){
+    var cls = i<cur ? "rung done" : (i===cur ? "rung here"+(late?" late-here":"") : "rung");
+    return '<button class="'+cls+'" data-act="stage" data-id="'+e.id+'" data-stage="'+s.id+'" title="Move to: '+esc(s.label)+'">'+
+      '<div class="rung-bar"></div><span class="rung-n">'+s.n+'</span><span class="rung-l">'+esc(s.short)+'</span></button>';
+  }).join("") + '</div>';
+}
+
+function metaHtml(k,v,mono){
+  return '<div><span class="meta-k">'+esc(k)+'</span><span class="meta-v'+(mono?" mono":"")+'">'+(v?esc(v):"\u2014")+'</span></div>';
+}
+
+function renderPipeline(c){
+  var chips = '<div class="chips">'+
+    '<button class="chip" aria-pressed="'+(UI.filter==="all")+'" data-filter="all">All<span class="n">'+c.all+'</span></button>'+
+    '<button class="chip late" aria-pressed="'+(UI.filter==="late")+'" data-filter="late">Overdue<span class="n">'+c.late+'</span></button>'+
+    '<button class="chip late" aria-pressed="'+(UI.filter==="exhausted")+'" data-filter="exhausted">Out of names<span class="n">'+c.exhausted+'</span></button>'+
+    STAGES.map(function(s){
+      return '<button class="chip" aria-pressed="'+(UI.filter===s.id)+'" data-filter="'+s.id+'">'+esc(s.label)+'<span class="n">'+(c[s.id]||0)+'</span></button>';
+    }).join("") + '</div>';
+
+  var needle = UI.q.trim().toLowerCase();
+  var rows = DATA.pipeline.filter(function(e){
+    if(UI.editor==="none" && e.editor) return false;
+    if(UI.editor!=="all" && UI.editor!=="none" && e.editor!==UI.editor) return false;
+    if(UI.filter==="late" && !lateness(e).late) return false;
+    if(UI.filter==="exhausted" && !exhausted(e)) return false;
+    if(UI.filter!=="all" && UI.filter!=="late" && UI.filter!=="exhausted" && e.stage!==UI.filter) return false;
+    if(!needle) return true;
+    var hay = [e.title,e.authors,e.publisher,e.reviewer.name,e.notes].concat(e.candidates.map(function(x){return x.name;})).join(" ").toLowerCase();
+    return hay.indexOf(needle) !== -1;
+  });
+
+  rows = rows.slice().sort(function(a,b){
+    if(UI.sort==="urgency"){
+      var la=lateness(a), lb=lateness(b);
+      if(la.late!==lb.late) return la.late ? -1 : 1;
+      if(la.late) return lb.days-la.days;
+      return stageIndex(b.stage)-stageIndex(a.stage);
+    }
+    if(UI.sort==="stage") return stageIndex(a.stage)-stageIndex(b.stage);
+    if(UI.sort==="title") return a.title.localeCompare(b.title);
+    return 0;
+  });
+
+  if(rows.length===0){
+    return chips + '<div class="empty"><div class="big">Nothing here</div>Clear the filter, or add a book to start a new entry.</div>';
+  }
+
+  return chips + rows.map(function(e){
+    var l = lateness(e);
+    var imprint = [e.place,e.publisher,e.year].filter(Boolean).join(", ") || "Publication details to be confirmed";
+    if(e.pages) imprint += " \u00b7 " + e.pages + " pp.";
+    if(e.price) imprint += " \u00b7 " + e.price;
+    if(e.isbn)  imprint += " \u00b7 ISBN " + e.isbn;
+
+    var h = '<article class="card'+(l.late?" is-late":"")+'">';
+    h += '<div class="card-head"><div style="min-width:0">';
+    h += '<h3 class="bk-title">'+esc(e.title||"Untitled entry")+'</h3>';
+    if(e.authors) h += '<p class="bk-by">'+esc(e.authors)+'</p>';
+    h += '<p class="bk-imprint">'+esc(imprint)+'</p></div>';
+    h += '<div class="card-actions">'+
+         (e.inRevision ? '<span class="rev-tag">In revision</span>' : '')+
+         (e.outcome ? '<span class="out-tag out-'+esc(e.outcome)+'">'+esc(e.outcome)+'</span>' : '')+
+         '<span class="ed-tag'+(e.editor?" ed-"+esc(e.editor):" ed-none")+'">'+esc(e.editor||"Unassigned")+'</span>'+
+         '<button class="btn ghost tiny" data-act="edit" data-id="'+e.id+'">Edit</button>';
+    if(e.stage==="final" && e.outcome==="Published"){
+      h += '<button class="btn ghost tiny" data-act="publish" data-id="'+e.id+'">Move to published</button>';
+    }
+    h += '</div></div>';
+
+    h += ladderHtml(e, l.late);
+
+    h += '<div class="meta">';
+    h += metaHtml("Status", stageLabel(e.stage), false);
+    h += metaHtml("Reviewer", e.reviewer.name ? (e.reviewer.name + (e.reviewer.affil ? " \u00b7 "+e.reviewer.affil : "")) : "", false);
+    h += metaHtml("Review due", fmtDate(e.dates.due), true);
+    h += metaHtml("Book sent", fmtDate(e.dates.bookSent), true);
+    h += metaHtml("Received", fmtDate(e.dates.received), true);
+    h += metaHtml("Last contact", fmtDate(e.lastContact), true);
+    h += metaHtml("Proposed by", e.source, false);
+    h += metaHtml("Copy supplied", e.format, false);
+    h += '</div>';
+
+    if(l.late){
+      h += '<div class="flagline'+(l.reason==="quiet"?" warn":"")+'"><span class="d">'+l.days+'</span>'+
+           (l.reason==="quiet" ? "days since last contact - worth a chase" : "days past the agreed date")+'</div>';
+    }
+
+    if(e.stage==="final" && !e.outcome){
+      h += '<div class="outcome-ask">Final status not recorded &mdash; '+
+           '<button class="btn ghost tiny" data-act="outcome" data-id="'+e.id+'" data-v="Published">Published</button> '+
+           '<button class="btn ghost tiny" data-act="outcome" data-id="'+e.id+'" data-v="Rejected">Rejected</button></div>';
+    }
+
+    if(exhausted(e)){
+      h += '<div class="flagline"><span class="d">'+e.candidates.length+'</span>'+
+           (e.candidates.length===1?"name approached, none left":"names approached, none left - needs fresh candidates")+'</div>';
+    }
+
+    if(e.candidates.length){
+      h += '<div class="approach"><div class="approach-head">Reviewers approached'+
+           '<span class="approach-count">'+e.candidates.length+' of '+MAX_CANDIDATES+'</span></div>';
+      h += e.candidates.map(function(x,i){
+        var st = x.state.replace(/[^A-Za-z]/g,"");
+        var dates = [];
+        if(x.invited) dates.push("asked " + fmtDate(x.invited));
+        if(x.replied) dates.push("replied " + fmtDate(x.replied));
+        var row = '<div class="app-row st-'+st+'">';
+        row += '<span class="app-n">'+(i+1)+'</span>';
+        row += '<span class="app-who"><strong>'+esc(x.name||"(unnamed)")+'</strong>';
+        if(x.affil) row += ' <span class="app-affil">'+esc(x.affil)+'</span>';
+        if(x.note) row += '<span class="app-note">'+esc(x.note)+'</span>';
+        row += '</span>';
+        row += '<span class="app-dates">'+esc(dates.join(" \u00b7 "))+'</span>';
+        row += '<span class="app-state st-'+st+'">'+esc(x.state)+'</span>';
+        row += '<span class="app-do">';
+        if(x.state==="Agreed" && (!e.reviewer.name || e.reviewer.name!==x.name)){
+          row += '<button class="btn ghost tiny" data-act="promote" data-id="'+e.id+'" data-i="'+i+'">Make reviewer</button>';
+        }
+        if(x.state==="Agreed" && e.reviewer.name===x.name){
+          row += '<button class="btn ghost tiny" data-act="lapse" data-id="'+e.id+'" data-i="'+i+'">Never delivered</button>';
+        }
+        if(x.state==="Invited"){
+          row += '<button class="btn ghost tiny" data-act="declined" data-id="'+e.id+'" data-i="'+i+'">Declined</button>';
+        }
+        row += '</span></div>';
+        return row;
+      }).join("");
+      h += '</div>';
+    }
+
+    if(e.notes) h += '<p class="notes">'+esc(e.notes)+'</p>';
+    h += '</article>';
+    return h;
+  }).join("");
+}
+
+function renderPublished(){
+  var needle = UI.q.trim().toLowerCase();
+  var rows = DATA.published.filter(function(p){
+    return !needle || [p.title,p.authors,p.publisher,p.reviewer].join(" ").toLowerCase().indexOf(needle)!==-1;
+  });
+  if(!rows.length) return '<div class="empty">No published reviews match that search.</div>';
+  var order=[], map={};
+  rows.forEach(function(p){ if(!map[p.issue]){ map[p.issue]=[]; order.push(p.issue);} map[p.issue].push(p); });
+  return order.map(function(k){
+    var items = map[k];
+    var h = '<h2 class="issue-head">'+esc(k)+' \u00b7 '+items.length+(items.length===1?" review":" reviews")+'</h2>';
+    h += items.map(function(p){
+      return '<div class="pub-row"><div><div class="pub-t">'+esc(p.title)+'</div>'+
+        '<div class="pub-sub">'+esc([p.authors,p.publisher,p.year].filter(Boolean).join(", "))+'</div></div>'+
+        '<div class="pub-rev"><span class="lbl">Reviewed by</span>'+esc(p.reviewer||"\u2014")+
+        (p.editor ? '<div style="color:var(--ink-3);margin-top:3px">Handled by '+esc(p.editor)+'</div>' : '')+'</div>'+
+        '<div>'+(p.doi ? '<a class="pub-link" href="'+esc(p.doi)+'" target="_blank" rel="noreferrer">Open \u2197</a>'
+                       : '<span class="pub-link" style="color:var(--ink-3)">No DOI</span>')+'</div></div>';
+    }).join("");
+    return h;
+  }).join("");
+}
+
+function renderBench(){
+  var needle = UI.q.trim().toLowerCase();
+  var rows = DATA.bench.filter(function(r){
+    return !needle || [r.name,r.affil,r.fields,r.note].join(" ").toLowerCase().indexOf(needle)!==-1;
+  });
+  if(!rows.length) return '<div class="empty">No reviewers match that search.</div>';
+  return '<h2 class="issue-head">Reviewers on file</h2>' + rows.map(function(r){
+    return '<div class="bench-row"><div><strong style="font-weight:600">'+esc(r.name)+'</strong>'+
+      '<div style="font-size:12px;color:var(--ink-2)">'+esc(r.affil)+'</div></div>'+
+      '<div style="font-size:12px;color:var(--ink-2)">'+esc(r.fields)+
+      (r.note?'<div style="color:var(--ink-3);margin-top:2px">'+esc(r.note)+'</div>':'')+'</div>'+
+      '<div><span class="pill '+esc(r.status)+'">'+esc(r.status)+'</span></div></div>';
+  }).join("");
+}
+
+function render(){
+  if(!DATA) return;
+  document.getElementById("stamp").innerHTML = esc(fmtDate(today())) + "<br />" + esc(NOTE);
+  var c = counts();
+  renderTally(c);
+  renderTabs();
+  renderToolbar();
+  var v = document.getElementById("view");
+  if(UI.tab==="pipeline") v.innerHTML = renderPipeline(c);
+  else if(UI.tab==="published") v.innerHTML = renderPublished();
+  else v.innerHTML = renderBench();
+  renderEditor();
+}
+
+/* ---------------- editor panel ---------------- */
+function renderEditor(){
+  var host = document.getElementById("overlay");
+  if(!UI.editing){ host.innerHTML = ""; return; }
+  var e = UI.editing;
+  var isNew = !!e.isNew;
+
+  function inp(id,val,ph,type){
+    return '<input class="inp" id="'+id+'" type="'+(type||"text")+'" value="'+esc(val||"")+'" placeholder="'+esc(ph||"")+'" />';
+  }
+
+  var h = '<div class="scrim" data-act="close"></div><aside class="panel" role="dialog" aria-label="Edit book"><div class="panel-in">';
+  h += '<div class="panel-head"><h2>'+(isNew?"Add a book":"Edit entry")+'</h2><button class="x" data-act="close" aria-label="Close">\u2715</button></div>';
+
+  h += '<div class="fieldset"><div class="legend">Book</div>';
+  h += '<label class="lab">Title</label>'+inp("f-title", e.title, "Full title and subtitle");
+  h += '<div class="gap"></div><label class="lab">Author or editors</label>'+inp("f-authors", e.authors, "By ... / Edited by ...");
+  h += '<div class="gap"></div><div class="grid3">'+
+       '<div><label class="lab">Publisher</label>'+inp("f-publisher", e.publisher)+'</div>'+
+       '<div><label class="lab">Place</label>'+inp("f-place", e.place)+'</div>'+
+       '<div><label class="lab">Year</label>'+inp("f-year", e.year)+'</div></div>';
+  h += '<div class="gap"></div><div class="grid3">'+
+       '<div><label class="lab">Pages</label>'+inp("f-pages", e.pages)+'</div>'+
+       '<div><label class="lab">Price</label>'+inp("f-price", e.price)+'</div>'+
+       '<div><label class="lab">ISBN</label>'+inp("f-isbn", e.isbn)+'</div></div></div>';
+
+  h += '<div class="fieldset"><div class="legend">Desk</div><div class="grid2">'+
+       '<div><label class="lab">Responsible editor</label><select class="inp" id="f-editor">'+
+         '<option value=""'+(!e.editor?" selected":"")+'>Unassigned</option>'+
+         EDITORS.map(function(x){ return '<option value="'+esc(x)+'"'+(e.editor===x?" selected":"")+'>'+esc(x)+'</option>'; }).join("")+
+       '</select></div>'+
+       '<div><label class="lab">Source of proposal</label><select class="inp" id="f-source">'+
+         '<option value=""'+(!e.source?" selected":"")+'>Not recorded</option>'+
+         SOURCES.map(function(x){ return '<option value="'+esc(x)+'"'+(e.source===x?" selected":"")+'>'+esc(x)+'</option>'; }).join("")+
+       '</select></div></div></div>';
+
+  h += '<div class="fieldset"><div class="legend">Status</div><select class="inp" id="f-stage">'+
+       STAGES.map(function(s){ return '<option value="'+s.id+'"'+(e.stage===s.id?" selected":"")+'>'+s.n+". "+esc(s.label)+'</option>'; }).join("")+
+       '</select>'+
+       '<div class="gap"></div><label class="lab">Final status &mdash; only applies at step 7</label>'+
+       '<select class="inp" id="f-outcome"'+(e.stage==="final"?"":" disabled")+'>'+
+         '<option value=""'+(!e.outcome?" selected":"")+'>Not yet decided</option>'+
+         OUTCOMES.map(function(x){ return '<option value="'+esc(x)+'"'+(e.outcome===x?" selected":"")+'>'+esc(x)+'</option>'; }).join("")+
+       '</select>'+
+       '<div class="gap"></div><label class="check"><input type="checkbox" id="f-inrevision"'+(e.inRevision?" checked":"")+' /> With the reviewer for revisions</label>'+
+       '<div class="gap"></div><label class="lab">Copy supplied as</label>'+
+       inp("f-format", e.format, "Hard copy from publisher / PDF / ebook")+'</div>';
+
+  h += '<div class="fieldset"><div class="legend">Confirmed reviewer</div><div class="grid2">'+
+       '<div><label class="lab">Name</label>'+inp("f-rname", e.reviewer.name)+'</div>'+
+       '<div><label class="lab">Email</label>'+inp("f-remail", e.reviewer.email)+'</div></div>'+
+       '<div class="gap"></div><label class="lab">Affiliation</label>'+inp("f-raffil", e.reviewer.affil)+'</div>';
+
+  h += '<div class="fieldset"><div class="legend">Reviewers approached &mdash; up to '+MAX_CANDIDATES+'</div><div id="cands">';
+  h += e.candidates.map(function(cd,i){
+    return '<div class="cand-slot">'+
+      '<div class="slot-head"><span class="slot-n">Approach '+(i+1)+'</span>'+
+        '<button class="x" data-act="cand-del" data-i="'+i+'" aria-label="Remove approach '+(i+1)+'">\u2715</button></div>'+
+      '<div class="grid2">'+
+        '<input class="inp c-name" data-i="'+i+'" value="'+esc(cd.name)+'" placeholder="Name" />'+
+        '<input class="inp c-affil" data-i="'+i+'" value="'+esc(cd.affil||"")+'" placeholder="Affiliation" />'+
+      '</div><div class="gap"></div><div class="grid2">'+
+        '<input class="inp c-email" data-i="'+i+'" value="'+esc(cd.email||"")+'" placeholder="Email" />'+
+        '<select class="inp c-state" data-i="'+i+'">'+CANDIDATE_STATES.map(function(s){
+          return '<option'+(cd.state===s?" selected":"")+'>'+esc(s)+'</option>'; }).join("")+'</select>'+
+      '</div><div class="gap"></div><div class="grid2">'+
+        '<div><label class="lab">Asked on</label><input type="date" class="inp c-invited" data-i="'+i+'" value="'+esc(cd.invited||"")+'" /></div>'+
+        '<div><label class="lab">Replied on</label><input type="date" class="inp c-replied" data-i="'+i+'" value="'+esc(cd.replied||"")+'" /></div>'+
+      '</div><div class="gap"></div>'+
+      '<input class="inp c-note" data-i="'+i+'" value="'+esc(cd.note||"")+'" placeholder="Note" />'+
+      '</div>';
+  }).join("");
+  h += '</div>';
+  if(e.candidates.length < MAX_CANDIDATES){
+    h += '<button class="btn ghost tiny" data-act="cand-add">Add approach '+(e.candidates.length+1)+'</button>';
+  } else {
+    h += '<p class="slot-full">Five approaches recorded. Remove one to add another, or consider whether the book is worth continuing to place.</p>';
+  }
+  h += '</div>';
+
+  h += '<div class="fieldset"><div class="legend">Dates</div><div class="grid3">'+
+       '<div><label class="lab">Invitation sent</label>'+inp("f-d-invited", e.dates.invited,"","date")+'</div>'+
+       '<div><label class="lab">Agreed</label>'+inp("f-d-agreed", e.dates.agreed,"","date")+'</div>'+
+       '<div><label class="lab">Book sent</label>'+inp("f-d-bookSent", e.dates.bookSent,"","date")+'</div></div>'+
+       '<div class="gap"></div><div class="grid3">'+
+       '<div><label class="lab">Review due</label>'+inp("f-d-due", e.dates.due,"","date")+'</div>'+
+       '<div><label class="lab">Review received</label>'+inp("f-d-received", e.dates.received,"","date")+'</div>'+
+       '<div><label class="lab">Last contact</label>'+inp("f-lastContact", e.lastContact,"","date")+'</div></div></div>';
+
+  h += '<div class="fieldset"><div class="legend">Notes</div><textarea class="inp" id="f-notes">'+esc(e.notes)+'</textarea></div>';
+
+  h += '<div class="panel-foot"><button class="btn" data-act="save">Save entry</button>'+
+       '<button class="btn ghost" data-act="close">Cancel</button><span class="spacer"></span>'+
+       (isNew?"":'<button class="btn danger" data-act="delete">Delete</button>')+'</div>';
+
+  h += '</div></aside>';
+  host.innerHTML = h;
+}
+
+function readCandidatesFromDom(){
+  var out = [];
+  var names = document.querySelectorAll("#cands .c-name");
+  function pick(cls,i){
+    var n = document.querySelector('#cands .'+cls+'[data-i="'+i+'"]');
+    return n ? n.value : "";
+  }
+  for(var i=0;i<names.length;i++){
+    out.push({
+      name: names[i].value,
+      affil: pick("c-affil",i),
+      email: pick("c-email",i),
+      state: pick("c-state",i),
+      invited: pick("c-invited",i),
+      replied: pick("c-replied",i),
+      note: pick("c-note",i)
+    });
+  }
+  return out;
+}
+
+function syncEditorFromDom(){
+  var e = UI.editing;
+  function val(id){ var n=document.getElementById(id); return n?n.value:""; }
+  e.title=val("f-title"); e.authors=val("f-authors"); e.publisher=val("f-publisher");
+  e.place=val("f-place"); e.year=val("f-year"); e.pages=val("f-pages");
+  e.price=val("f-price"); e.isbn=val("f-isbn"); e.stage=val("f-stage");
+  e.format=val("f-format"); e.notes=val("f-notes"); e.lastContact=val("f-lastContact");
+  e.editor=val("f-editor"); e.source=val("f-source"); e.outcome=val("f-outcome");
+  var rv=document.getElementById("f-inrevision"); e.inRevision = rv ? rv.checked : false;
+  if(e.stage !== "final") e.outcome = "";
+  e.reviewer={name:val("f-rname"), email:val("f-remail"), affil:val("f-raffil")};
+  e.dates={invited:val("f-d-invited"), agreed:val("f-d-agreed"), bookSent:val("f-d-bookSent"),
+           due:val("f-d-due"), received:val("f-d-received")};
+  e.candidates = readCandidatesFromDom();
+}
+
+function blankEntry(){
+  return {id:"p-"+uid(), isNew:true, title:"", authors:"", publisher:"", place:"", year:"",
+    pages:"", price:"", isbn:"", stage:"suitable", editor:"", source:"", outcome:"", inRevision:false,
+    reviewer:{name:"",email:"",affil:""}, candidates:[],
+    dates:{invited:"",agreed:"",bookSent:"",due:"",received:""},
+    format:"", lastContact:"", notes:""};
+}
+
+/* ---------------- events ---------------- */
+document.addEventListener("click", function(ev){
+  var t = ev.target.closest("[data-act], [data-tab], [data-filter]");
+  if(!t) return;
+
+  if(t.dataset.tab){ UI.tab = t.dataset.tab; UI.filter="all"; render(); return; }
+  if(t.dataset.filter){ UI.filter = t.dataset.filter; render(); return; }
+
+  var act = t.dataset.act;
+
+  if(act==="stage"){
+    var id = t.dataset.id, st = t.dataset.stage;
+    DATA.pipeline = DATA.pipeline.map(function(e){
+      return e.id===id ? Object.assign({}, e, {stage:st, lastContact:today()}) : e;
+    });
+    save(); return;
+  }
+  if(act==="edit"){
+    var found = DATA.pipeline.filter(function(e){ return e.id===t.dataset.id; })[0];
+    UI.editing = clone(found); renderEditor(); return;
+  }
+  if(act==="publish"){
+    var e2 = DATA.pipeline.filter(function(x){ return x.id===t.dataset.id; })[0];
+    DATA.published.unshift({id:"b-"+uid(), issue:"Unassigned", title:e2.title, authors:e2.authors,
+      publisher:e2.publisher, year:e2.year, reviewer:e2.reviewer.name, editor:e2.editor||"", doi:""});
+    DATA.pipeline = DATA.pipeline.filter(function(x){ return x.id!==e2.id; });
+    save(); return;
+  }
+  if(act==="outcome"){
+    var oid = t.dataset.id, ov = t.dataset.v;
+    DATA.pipeline = DATA.pipeline.map(function(e){
+      return e.id===oid ? Object.assign({}, e, {outcome:ov, inRevision:false, lastContact:today()}) : e;
+    });
+    save(); return;
+  }
+  if(act==="promote" || act==="declined" || act==="lapse"){
+    var pid = t.dataset.id, ci = parseInt(t.dataset.i,10);
+    DATA.pipeline = DATA.pipeline.map(function(e){
+      if(e.id !== pid) return e;
+      var n = clone(e);
+      var c = n.candidates[ci];
+      if(act==="promote"){
+        n.reviewer = {name:c.name, email:c.email||"", affil:c.affil||""};
+        c.state = "Agreed";
+        if(!c.replied) c.replied = today();
+        n.dates.agreed = n.dates.agreed || c.replied;
+        if(stageIndex(n.stage) < stageIndex("agreed")) n.stage = "agreed";
+      }
+      if(act==="declined"){
+        c.state = "Declined";
+        if(!c.replied) c.replied = today();
+      }
+      if(act==="lapse"){
+        if(!confirm("Mark " + (c.name||"this reviewer") + " as having accepted but never delivered? The book goes back to needing a reviewer.")) return e;
+        c.state = "Accepted, no delivery";
+        n.reviewer = {name:"", email:"", affil:""};
+        n.dates.due = "";
+        n.stage = "potential";
+      }
+      n.lastContact = today();
+      return n;
+    });
+    save(); return;
+  }
+  if(act==="close"){ UI.editing=null; renderEditor(); return; }
+  if(act==="cand-add"){
+    syncEditorFromDom();
+    if(UI.editing.candidates.length < MAX_CANDIDATES){
+      UI.editing.candidates.push({name:"",affil:"",email:"",state:"Suggested",invited:"",replied:"",note:""});
+    }
+    renderEditor(); return;
+  }
+  if(act==="cand-del"){
+    var i = parseInt(t.dataset.i,10);
+    syncEditorFromDom();
+    UI.editing.candidates.splice(i,1);
+    renderEditor(); return;
+  }
+  if(act==="save"){
+    syncEditorFromDom();
+    var rec = clone(UI.editing); delete rec.isNew;
+    var exists = DATA.pipeline.some(function(x){ return x.id===rec.id; });
+    DATA.pipeline = exists ? DATA.pipeline.map(function(x){ return x.id===rec.id ? rec : x; })
+                           : [rec].concat(DATA.pipeline);
+    UI.editing = null; save(); return;
+  }
+  if(act==="delete"){
+    if(!confirm("Delete this entry? This cannot be undone.")) return;
+    DATA.pipeline = DATA.pipeline.filter(function(x){ return x.id!==UI.editing.id; });
+    UI.editing = null; save(); return;
+  }
+});
+
+document.addEventListener("input", function(ev){
+  if(ev.target.id==="q"){ UI.q = ev.target.value; var pos=ev.target.selectionStart; render();
+    var n=document.getElementById("q"); if(n){ n.focus(); n.setSelectionRange(pos,pos); } }
+});
+document.addEventListener("change", function(ev){
+  if(ev.target.id==="sort"){ UI.sort = ev.target.value; render(); }
+  if(ev.target.id==="editorfilter"){ UI.editor = ev.target.value; render(); }
+  if(ev.target.id==="f-stage" && UI.editing){ syncEditorFromDom(); UI.editing.stage = ev.target.value; renderEditor(); }
+});
+document.addEventListener("keydown", function(ev){
+  if(ev.key==="Escape" && UI.editing){ UI.editing=null; renderEditor(); }
+});
+
+document.getElementById("btn-export-json").addEventListener("click", function(){
+  download("data.json", JSON.stringify(DATA, null, 2), "application/json");
+});
+document.getElementById("btn-import-json").addEventListener("click", function(){
+  document.getElementById("file-input").click();
+});
+document.getElementById("file-input").addEventListener("change", function(ev){
+  var f = ev.target.files[0]; if(!f) return;
+  var r = new FileReader();
+  r.onload = function(){
+    try{
+      var j = JSON.parse(r.result);
+      if(!j.pipeline) throw new Error("not a dashboard file");
+      DATA = normalize(j); NOTE = "Imported " + f.name; save();
+    }catch(err){ alert("That file could not be read. It should be a data.json exported from this dashboard."); }
+  };
+  r.readAsText(f);
+  ev.target.value = "";
+});
+document.getElementById("btn-reload-shared").addEventListener("click", function(){
+  if(location.protocol === "file:"){
+    alert("Loading data.json only works when the dashboard is served from a web address, such as GitHub Pages. Use Import data file instead.");
+    return;
+  }
+  if(!confirm("Replace what is on screen with the shared data.json? Anything you have not exported will be lost.")) return;
+  fetch("data.json", {cache:"no-store"})
+    .then(function(r){ if(!r.ok) throw new Error("missing"); return r.json(); })
+    .then(function(j){ DATA=normalize(j); NOTE="Shared data.json loaded"; save(); })
+    .catch(function(){ alert("No data.json was found next to this page."); });
+});
+document.getElementById("btn-reset").addEventListener("click", function(){
+  if(!confirm("Reset to the original data from your two Word files? Your current entries will be lost.")) return;
+  DATA = clone(SEED); NOTE = "Reset to the original files"; save();
+});
+
+document.addEventListener("click", function(ev){
+  var b = ev.target.closest("#btn-add, #btn-csv");
+  if(!b) return;
+  if(b.id==="btn-add"){ UI.editing = blankEntry(); renderEditor(); }
+  if(b.id==="btn-csv"){
+    var head = ["Title","Author/editors","Publisher","Place","Year","Pages","Price","ISBN","Responsible editor","Proposed by","Status","Final status","In revision","Late","Out of names","Reviewer","Reviewer email"];
+    for(var k=1;k<=MAX_CANDIDATES;k++){
+      head.push("Approach "+k, "Approach "+k+" status", "Approach "+k+" asked", "Approach "+k+" replied");
+    }
+    head = head.concat(["Invited","Agreed","Book sent","Due","Received","Last contact","Format","Notes"]);
+
+    var rows = DATA.pipeline.map(function(e){
+      var l = lateness(e);
+      var r = [e.title,e.authors,e.publisher,e.place,e.year,e.pages,e.price,e.isbn,
+        e.editor, e.source, stageLabel(e.stage), e.outcome, e.inRevision ? "yes" : "", l.late ? (l.days+" days "+(l.reason==="quiet"?"no contact":"past due")) : "",
+        exhausted(e) ? "yes" : "",
+        e.reviewer.name, e.reviewer.email];
+      for(var k=0;k<MAX_CANDIDATES;k++){
+        var c = e.candidates[k];
+        r.push(c ? (c.name + (c.affil ? " ("+c.affil+")" : "")) : "",
+               c ? c.state : "", c ? c.invited : "", c ? c.replied : "");
+      }
+      return r.concat([e.dates.invited,e.dates.agreed,e.dates.bookSent,e.dates.due,e.dates.received,
+        e.lastContact,e.format,e.notes]);
+    });
+    var csv = [head].concat(rows).map(function(r){ return r.map(csvEscape).join(","); }).join("\n");
+    download("governance-review-pipeline.csv", csv, "text/csv;charset=utf-8");
+  }
+});
+
+boot();
+</script>
+</body>
+</html>
